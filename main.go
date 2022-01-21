@@ -1,21 +1,20 @@
 package main
 
 import (
-	"crypto/sha256"
 	"fmt"
+
+	"github.io/wisysta/nomadcoin/blockchain"
 )
 
-type block struct {
-	data     string
-	hash     string
-	prevhash string
-}
-
 func main() {
-	genesisBlock := block{"Genesis Block", "", ""}
-	hash := sha256.Sum256([]byte(genesisBlock.data + genesisBlock.prevhash))
-	hexHash := fmt.Sprintf("%x", hash)
-	genesisBlock.hash = hexHash
+	chain := blockchain.GetBlockchain()
+	chain.AddBlock("Second Block")
+	chain.AddBlock("Third Block")
+	chain.AddBlock("Fourth Block")
 
-	fmt.Println(genesisBlock)
+	for _, block := range chain.AllBlocks() {
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Hash: %s\n", block.Hash)
+		fmt.Printf("Prevhash: %s\n", block.Prevhash)
+	}
 }
