@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.io/wisysta/nomadcoin/cli"
+	"github.io/wisysta/nomadcoin/blockchain"
 )
 
 func main() {
-	cli.Start()
+	blockchain.Blockchain()
 }
