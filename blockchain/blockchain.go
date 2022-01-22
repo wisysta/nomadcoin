@@ -2,18 +2,20 @@ package blockchain
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"sync"
 )
 
-type block struct {
-	Data     string
-	Hash     string
-	Prevhash string
+type Block struct {
+	Data     string `json:"data"`
+	Hash     string `json:"hash"`
+	PrevHash string `json:"prevHash,omitempty"`
+	Height   int    `json:"height"`
 }
 
 type blockchain struct {
-	blocks []*block
+	blocks []*Block
 }
 
 // 1. value receiver -> 객체를 value로 가져와서 사용하는 리시버
@@ -24,8 +26,8 @@ type blockchain struct {
 var b *blockchain
 var once sync.Once
 
-func (b *block) calculateHash() {
-	hash := sha256.Sum256([]byte(b.Data + b.Prevhash))
+func (b *Block) calculateHash() {
+	hash := sha256.Sum256([]byte(b.Data + b.PrevHash))
 	b.Hash = fmt.Sprintf("%x", hash)
 }
 
@@ -38,8 +40,8 @@ func getLastHash() string {
 	return GetBlockchain().blocks[totalBlocks-1].Hash
 }
 
-func createBlock(data string) *block {
-	newBlock := block{data, "", getLastHash()}
+func createBlock(data string) *Block {
+	newBlock := Block{data, "", getLastHash(), len(GetBlockchain().blocks) + 1}
 	newBlock.calculateHash()
 	return &newBlock
 }
@@ -59,6 +61,15 @@ func GetBlockchain() *blockchain {
 	return b
 }
 
-func (b *blockchain) AllBlocks() []*block {
+var ErrNotFound = errors.New("block not found")
+
+func (b *blockchain) AllBlocks() []*Block {
 	return b.blocks
+}
+
+func (b *blockchain) GetBlock(height int) (*Block, error) {
+	if height > len(b.blocks) {
+		return nil, ErrNotFound
+	}
+	return b.blocks[height-1], nil
 }
