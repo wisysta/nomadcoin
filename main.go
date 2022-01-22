@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.io/wisysta/nomadcoin/rest"
+	"github.io/wisysta/nomadcoin/cli"
 )
 
 func main() {
-	rest.Start(4000)
+	cli.Start()
 }
