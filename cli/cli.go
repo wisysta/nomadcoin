@@ -3,7 +3,7 @@ package cli
 import (
 	"flag"
 	"fmt"
-	"os"
+	"runtime"
 
 	"github.io/wisysta/nomadcoin/explorer"
 	"github.io/wisysta/nomadcoin/rest"
@@ -14,7 +14,7 @@ func usage() {
 	fmt.Printf("Please use the following commands:\n")
 	fmt.Printf("-port=4000: Set the PORT of the server\n")
 	fmt.Printf("-mode=rest: Choose between 'html' and 'rest'\n")
-	os.Exit(1)
+	runtime.Goexit()
 }
 
 func Start() {
